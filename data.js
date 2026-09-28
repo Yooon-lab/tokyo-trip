@@ -56,7 +56,7 @@ const DAYS = [
 
 /* ---------- 공용 도우미 ---------- */
 const TRIP_START = "2026-11-06";
-const KEYS = { meals: "tokyo-trip-checks-v1", prep: "tokyo-prep-v1", resv: "tokyo-resv-v1" };
+const KEYS = { prep: "tokyo-prep-v1", resv: "tokyo-resv-v1" };
 const tagClass = { "식사": "meal", "간식": "snack", "술": "drink" };
 const dotClass = { "식사": "dot-meal", "간식": "dot-snack", "술": "dot-drink" };
 const mapUrl = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);

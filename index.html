@@ -26,7 +26,7 @@
 </header>
 
 <main>
-  <section class="hero">
+  <section class="cover" aria-label="표지">
     <div class="wrap wide">
       <h1>도쿄<br>먹방 4일</h1>
       <p class="dates">11월 6일(금) 오전 입국, 11월 9일(월) 18시 나리타 출국</p>
@@ -42,7 +42,7 @@
 
   <section class="wrap wide" aria-labelledby="ov-h">
     <h2 class="section-title" id="ov-h">한눈에 보는 4일</h2>
-    <p class="section-sub">각 일차의 끼니를 시간순으로 줄였습니다. 일차를 누르면 상세 일정으로 이동합니다.</p>
+    <p class="section-sub">각 일차의 끼니를 시간순으로 줄였습니다. "상세 일정 보기"를 누르면 장소와 메모가 있는 시간표로 이동합니다.</p>
     <ol class="route" id="route"></ol>
     <div class="daygrid" id="daygrid"></div>
     <div class="legend" aria-label="범례">
@@ -57,7 +57,7 @@
     <div class="links">
       <a class="linkcard" href="schedule.html">
         <h3>상세 일정</h3>
-        <p>장소, 메모, 지도 링크가 붙은 시간표입니다. 먹은 끼니를 체크할 수 있습니다.</p>
+        <p>장소, 메모, 지도 링크가 붙은 시간표입니다.</p>
         <span class="prog" id="prog-meals"></span>
       </a>
       <a class="linkcard" href="archive.html">
@@ -103,35 +103,30 @@ function renderRoute() {
 }
 
 function renderGrid() {
-  const checks = loadJSON(KEYS.meals);
   let total = 0;
   document.getElementById("daygrid").innerHTML = DAYS.map((d, di) => {
     const list = d.slots;
-    let n = 0, done = 0;
+    let n = 0;
     const items = list.map(s => {
       if (s.kind === "break") {
         return `<li class="brk"><span class="t">${s.time}</span><span>${s.title}</span><span></span></li>`;
       }
       n += 1;
-      if (checks[`${d.id}-${n}`]) done += 1;
       const dots = s.tags.map(t => `<i class="${dotClass[t]}" title="${t}"></i>`).join("");
       return `<li><span class="t">${s.time}</span><span>${s.title}</span><span class="dots">${dots}</span></li>`;
     }).join("");
     total += n;
-    const bars = Array.from({ length: n }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("");
     return `<article class="daycol">
       <p class="no">${di + 1}일차, ${d.date.replace("요일", "")}</p>
       <h3>${d.title}</h3>
       <p class="where">${ROUTES[d.id]}</p>
-      <div class="meter ${done === n ? "full" : ""}">${bars}</div>
-      <p class="cnt">${n}끼 중 ${done}끼 먹었어요</p>
+      <p class="cnt">${n}끼</p>
       <ul class="mini">${items}</ul>
       <a class="more" href="schedule.html#${d.id}">상세 일정 보기</a>
     </article>`;
   }).join("");
   document.getElementById("fact-meals").textContent = total + "끼";
-  const eaten = DAYS.reduce((a, d) => a + countChecked(checks, meals(d).map((_, i) => `${d.id}-${i + 1}`)), 0);
-  document.getElementById("prog-meals").textContent = `먹은 끼니 ${eaten}/${total}`;
+  document.getElementById("prog-meals").textContent = `4일 ${total}끼, 시간표와 지도 링크`;
 }
 
 function renderDday() {

@@ -284,3 +284,45 @@ details li { margin-bottom: 6px; }
 .foot button { font: inherit; color: var(--indigo); background: none; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; margin: 0 8px 8px 0; }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .meter i { transition: none; } }
+
+/* Cover (home) */
+.cover {
+  --cover: url("cover.svg");
+  position: relative;
+  color: #fff;
+  min-height: min(80vh, 640px);
+  display: flex;
+  align-items: center;
+  padding: 56px 0;
+  background:
+    linear-gradient(90deg, rgba(8, 14, 34, 0.78) 0%, rgba(8, 14, 34, 0.45) 45%, rgba(8, 14, 34, 0) 75%),
+    var(--cover) 72% center / cover no-repeat,
+    #0b1533;
+}
+.cover .wrap { width: 100%; }
+.cover h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 12vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+.cover p { color: rgba(255, 255, 255, 0.88); max-width: 46ch; margin: 0 0 6px; }
+.cover .dates { color: #fff; font-weight: 700; }
+.cover .facts li b { color: #fff; }
+.cover .facts li span { color: rgba(255, 255, 255, 0.78); }
+.cover .dday { color: var(--lantern) !important; }
+@media (max-width: 640px) {
+  .cover {
+    min-height: 620px;
+    align-items: flex-end;
+    padding: 40px 0 32px;
+    background:
+      linear-gradient(0deg, rgba(8, 14, 34, 0.92) 0%, rgba(8, 14, 34, 0.7) 45%, rgba(8, 14, 34, 0) 80%),
+      var(--cover) 74% top / cover no-repeat,
+      #0b1533;
+  }
+}
