@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도쿄 먹방 4일 | 준비·예약</title>
+<meta name="description" content="출국 전 준비 체크리스트와 예약이 필요한 곳 정리">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍶</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap wide">
+    <a class="brand" href="index.html">도쿄 먹방 4일</a>
+    <nav class="tabs" aria-label="페이지">
+      <a href="index.html">홈</a>
+      <a href="schedule.html">상세 일정</a>
+      <a href="archive.html">아카이브</a>
+      <a href="prep.html" aria-current="page">준비·예약</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="subnav" aria-label="섹션">
+  <div class="wrap">
+    <a class="chip" href="#changes">바뀐 규정</a>
+    <a class="chip" href="#prep">준비 체크리스트</a>
+    <a class="chip" href="#reserve">예약</a>
+    <a class="chip" href="#sources">출처</a>
+  </div>
+</nav>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>준비와 예약</h1>
+    <p>출발 전에 끝낼 일과 미리 예약할 곳입니다. 체크하면 이 브라우저에 저장됩니다.</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section id="changes" class="group" aria-labelledby="ch-h">
+    <h2 id="ch-h">이번 여행에 해당하는 바뀐 규정</h2>
+    <p class="when">2026년 9월 28일 기준으로 확인한 내용입니다. 출발 전에 공식 안내를 다시 확인하세요.</p>
+    <div class="callout">
+      <h3>면세 쇼핑이 환급 방식으로 바뀌었습니다 (11월 1일부터)</h3>
+      <p>계산대에서 세금을 뺀 가격이 아니라 세금 포함 가격으로 결제하고, 출국할 때 물건을 들고 나가는지 확인받은 뒤 환급받습니다.</p>
+      <p>한 매장에서 하루 5,000엔 이상이라는 최저 금액 기준은 그대로입니다. 물건을 개봉해 쓰면 환급 대상에서 빠집니다. 여행 마지막 날 쇼핑을 몰아서 하면 공항에서 시간이 부족할 수 있으니 4일차 나리타 도착을 넉넉하게 잡았습니다.</p>
+    </div>
+    <div class="callout">
+      <h3>출국세가 1,000엔에서 3,000엔으로 올랐습니다 (7월 1일부터)</h3>
+      <p>항공권 가격에 포함되어 있어 공항에서 따로 내지 않습니다. 이미 발권한 항공권이라면 발권 시점에 따라 금액이 다를 수 있습니다.</p>
+    </div>
+    <div class="callout">
+      <h3>Visit Japan Web은 미리 등록하는 편이 빠릅니다</h3>
+      <p>한국 국적은 90일 무비자입니다. 입국 심사와 세관 정보를 미리 등록하면 QR 코드로 절차를 진행할 수 있고, 면세 정보도 같은 계정에서 등록합니다.</p>
+    </div>
+  </section>
+
+  <section id="prep" aria-labelledby="pr-h">
+    <div id="prepbox"></div>
+  </section>
+
+  <section id="reserve" class="group" aria-labelledby="rv-h">
+    <h2 id="rv-h">예약이 필요한 곳</h2>
+    <p class="when">필수는 반드시, 권장은 5명 자리를 위해 미리, 선택은 예약이 어렵거나 필요 없는 곳입니다.</p>
+    <ul class="resv" id="resvbox"></ul>
+  </section>
+
+  <section id="sources" class="group" aria-labelledby="so-h">
+    <h2 id="so-h">출처와 확인할 곳</h2>
+    <ul class="sources">
+      <li><a href="https://services.digital.go.jp/ko/visit-japan-web/" target="_blank" rel="noopener">Visit Japan Web (일본 디지털청)</a></li>
+      <li><a href="https://www.shijou.metro.tokyo.lg.jp/calendar/2026" target="_blank" rel="noopener">도쿄도 중앙도매시장 2026년 휴장일 달력</a></li>
+      <li><a href="https://www.tsukiji.or.jp/calendar/" target="_blank" rel="noopener">츠키지 장외시장 운영 달력</a></li>
+      <li>면세 환급 절차와 한국 세관 한도는 변경될 수 있으니 출발 직전에 일본 정부관광국과 한국 관세청 안내를 확인하세요.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <button type="button" id="reset">체크 초기화</button>
+    <button type="button" id="theme">화면 모드 바꾸기</button>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+let prep = loadJSON(KEYS.prep);
+let resv = loadJSON(KEYS.resv);
+
+function renderPrep() {
+  document.getElementById("prepbox").innerHTML = PREP_GROUPS.map(g => {
+    const items = PREP.filter(p => p.group === g.id);
+    const done = countChecked(prep, items.map(i => i.id));
+    return `<div class="group">
+      <h2>${g.id}</h2>
+      <p class="when">${g.when}, ${items.length}개 중 ${done}개 완료</p>
+      <ul class="todos">${items.map(i => `<li class="todo${prep[i.id] ? " done" : ""}">
+        <input type="checkbox" id="${i.id}" data-kind="prep" ${prep[i.id] ? "checked" : ""}>
+        <div><h3><label for="${i.id}">${i.title}</label></h3><p>${i.detail}</p></div>
+      </li>`).join("")}</ul>
+    </div>`;
+  }).join("");
+}
+
+function renderResv() {
+  document.getElementById("resvbox").innerHTML = RESERVE.map(r => `<li class="rv${resv[r.id] ? " done" : ""}">
+    <input type="checkbox" id="${r.id}" data-kind="resv" ${resv[r.id] ? "checked" : ""} aria-label="예약 완료">
+    <div class="when2"><b>${r.day}</b>${r.when}</div>
+    <div class="rvbody">
+      <h3><label for="${r.id}">${r.title}</label><span class="pri ${r.pri}">${PRI_LABEL[r.pri]}</span></h3>
+      <p>${r.note}</p>
+    </div>
+  </li>`).join("");
+}
+
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (!el.matches("input[type=checkbox][data-kind]")) return;
+  if (el.dataset.kind === "prep") { prep[el.id] = el.checked; saveJSON(KEYS.prep, prep); renderPrep(); const again = document.getElementById(el.id); if (again) again.focus(); }
+  else { resv[el.id] = el.checked; saveJSON(KEYS.resv, resv); el.closest(".rv").classList.toggle("done", el.checked); }
+});
+document.getElementById("reset").addEventListener("click", () => {
+  if (confirm("체크한 기록을 모두 지울까요?")) {
+    prep = {}; resv = {}; saveJSON(KEYS.prep, prep); saveJSON(KEYS.resv, resv); renderPrep(); renderResv();
+  }
+});
+document.getElementById("theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+
+renderPrep(); renderResv();
+</script>
+</body>
+</html>

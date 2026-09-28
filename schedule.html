@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도쿄 먹방 4일 | 상세 일정</title>
+<meta name="description" content="11월 6일부터 9일까지 시간별 상세 일정과 지도 링크">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍶</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap wide">
+    <a class="brand" href="index.html">도쿄 먹방 4일</a>
+    <nav class="tabs" aria-label="페이지">
+      <a href="index.html">홈</a>
+      <a href="schedule.html" aria-current="page">상세 일정</a>
+      <a href="archive.html">아카이브</a>
+      <a href="prep.html">준비·예약</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="subnav" aria-label="일차 바로가기">
+  <div class="wrap">
+    <a class="chip" href="#day1">1일차 11/6 금</a>
+    <a class="chip" href="#day2">2일차 11/7 토</a>
+    <a class="chip" href="#day3">3일차 11/8 일</a>
+    <a class="chip" href="#day4">4일차 11/9 월</a>
+    <a class="chip" href="#tips">실전 팁</a>
+  </div>
+</nav>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>상세 일정</h1>
+    <p>시간은 목표 시각입니다. 먹은 끼니를 체크하면 홈 화면의 막대가 채워집니다.</p>
+  </div>
+</div>
+
+<main class="wrap" id="days"></main>
+
+<section class="plain" id="tips">
+  <div class="wrap">
+    <h2>실전 팁</h2>
+    <ol class="tips">
+      <li><b>예약</b>: 5명은 한 번에 입장하기 어려운 가게가 많습니다. 저녁 식사는 미리 예약하세요. 예약 목록은 <a href="prep.html#reserve">준비·예약</a> 페이지에 있습니다.</li>
+      <li><b>좁은 술집</b>: 골든가이나 타치노미는 5명이 다 못 들어갈 수 있습니다. 2명, 3명으로 나눠 들어가고 옆 가게에서 만나는 방법이 편합니다.</li>
+      <li><b>위장 관리</b>: 단품이나 나눠 먹기 위주로 주문하고, 간식은 한 개를 5명이 나눠 먹으면 하루 7끼가 가능합니다.</li>
+      <li><b>막차와 휴무일</b>: 요코하마, 가와고에에서 돌아오는 마지막 열차 시간과 각 가게의 휴무일은 출발 전에 확인하세요.</li>
+    </ol>
+
+    <details>
+      <summary>초안에서 바꾼 점</summary>
+      <ul>
+        <li>입국 당일 요코하마 이동을 빼고, 도심(츠키지, 긴자, 신바시)에서 가볍게 시작하도록 바꿨습니다. 요코하마는 3일차(일)로 옮겼습니다.</li>
+        <li>초안의 요일이 하루씩 어긋나 있었습니다. 11월 6일은 금요일이므로 금, 토, 일, 월로 바로잡았습니다.</li>
+        <li>츠키지 장외시장은 일요일에 쉬는 가게가 많아 금요일(1일차)에 배치했습니다. 도요스 시장은 일요일 휴장이라 월요일(4일차)로 두었습니다.</li>
+        <li>1일차와 4일차는 이동과 공항 시간을 고려해 6끼로 줄였습니다. 4일차의 츠케멘은 돈카츠와 겹쳐서 뺐고, 나리타 이동 시간에 맞춰 식사 시각을 앞당겼습니다.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>출발 전에 확인할 것</summary>
+      <ul>
+        <li>가와고에 사케 시음 자판기(초안의 "쇼와쿠라")는 정확한 상호와 운영 여부를 확인하지 못했습니다.</li>
+        <li>요코하마 크래프트 맥주집(초안의 Thrash Zone)은 영업시간을 확인하세요.</li>
+        <li>나리타 익스프레스 시간과 예약 여부, 항공편 터미널(1, 2, 3)을 확인하세요.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <button type="button" id="reset">체크 초기화</button>
+    <button type="button" id="theme">화면 모드 바꾸기</button>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+let checks = loadJSON(KEYS.meals);
+
+function render() {
+  document.getElementById("days").innerHTML = DAYS.map((d, di) => {
+    let n = 0;
+    const slots = d.slots.map(s => {
+      if (s.kind === "break") {
+        return `<li class="slot break"><span class="time">${s.time}</span><div class="body"><h3>${s.title}</h3>${s.note ? `<p class="note">${s.note}</p>` : ""}</div></li>`;
+      }
+      n += 1;
+      const id = `${d.id}-${n}`;
+      const done = !!checks[id];
+      const tags = s.tags.map(t => `<span class="tag ${tagClass[t]}">${t}</span>`).join("");
+      return `<li class="slot${done ? " done" : ""}" data-id="${id}">
+        <span class="time">${s.time}</span>
+        <div class="body">
+          <h3>${s.title}</h3>
+          ${s.place ? `<p class="place">${s.place}</p>` : ""}
+          ${s.desc ? `<p class="desc">${s.desc}</p>` : ""}
+          ${s.note ? `<p class="note">${s.note}</p>` : ""}
+          <div class="row">
+            ${tags}
+            <a class="maplink" href="${mapUrl(s.q)}" target="_blank" rel="noopener">지도에서 찾기</a>
+            <label class="check"><input type="checkbox" data-id="${id}" ${done ? "checked" : ""}>먹었어요</label>
+          </div>
+        </div>
+      </li>`;
+    }).join("");
+    return `<section class="day" id="${d.id}" aria-labelledby="${d.id}-h">
+      <div class="day-head">
+        <p class="date">${di + 1}일차, ${d.date}</p>
+        <h2 id="${d.id}-h">${d.title}</h2>
+        <p class="lead">${d.lead}</p>
+        <div class="meter" data-meter="${d.id}" role="img" aria-label="먹은 끼니"></div>
+        <div class="count" data-count="${d.id}"></div>
+      </div>
+      <ol class="slots">${slots}</ol>
+    </section>`;
+  }).join("");
+  updateMeters();
+}
+
+function updateMeters() {
+  DAYS.forEach(d => {
+    const total = meals(d).length;
+    const done = countChecked(checks, Array.from({ length: total }, (_, i) => `${d.id}-${i + 1}`));
+    const el = document.querySelector(`[data-meter="${d.id}"]`);
+    if (el) {
+      el.innerHTML = Array.from({ length: total }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("");
+      el.classList.toggle("full", done === total);
+    }
+    const c = document.querySelector(`[data-count="${d.id}"]`);
+    if (c) c.textContent = `${total}끼 중 ${done}끼 먹었어요`;
+  });
+}
+
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.matches("input[type=checkbox][data-id]")) {
+    checks[el.dataset.id] = el.checked;
+    saveJSON(KEYS.meals, checks);
+    el.closest(".slot").classList.toggle("done", el.checked);
+    updateMeters();
+  }
+});
+document.getElementById("reset").addEventListener("click", () => {
+  if (confirm("체크한 기록을 모두 지울까요?")) { checks = {}; saveJSON(KEYS.meals, checks); render(); }
+});
+document.getElementById("theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+
+render();
+</script>
+</body>
+</html>

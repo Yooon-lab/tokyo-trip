@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도쿄 먹방 4일 | 홈</title>
+<meta name="description" content="11월 6일부터 9일까지, 도쿄와 가와고에, 요코하마를 먹고 마시며 다니는 성인 5인 여행 계획">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍶</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap wide">
+    <a class="brand" href="index.html">도쿄 먹방 4일</a>
+    <nav class="tabs" aria-label="페이지">
+      <a href="index.html" aria-current="page">홈</a>
+      <a href="schedule.html">상세 일정</a>
+      <a href="archive.html">아카이브</a>
+      <a href="prep.html">준비·예약</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap wide">
+      <h1>도쿄<br>먹방 4일</h1>
+      <p class="dates">11월 6일(금) 오전 입국, 11월 9일(월) 18시 나리타 출국</p>
+      <p>성인 5명이 도쿄 시내와 소도시 두 곳(가와고에, 요코하마)을 먹고 마시며 다닙니다.</p>
+      <ul class="facts">
+        <li><b class="dday" id="dday">D-?</b><span>출발까지</span></li>
+        <li><b id="fact-meals">26끼</b><span>4일 동안 먹는 횟수</span></li>
+        <li><b>5명</b><span>성인 일행</span></li>
+        <li><b>3곳</b><span>도쿄, 가와고에, 요코하마</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap wide" aria-labelledby="ov-h">
+    <h2 class="section-title" id="ov-h">한눈에 보는 4일</h2>
+    <p class="section-sub">각 일차의 끼니를 시간순으로 줄였습니다. 일차를 누르면 상세 일정으로 이동합니다.</p>
+    <ol class="route" id="route"></ol>
+    <div class="daygrid" id="daygrid"></div>
+    <div class="legend" aria-label="범례">
+      <span><i class="dot-meal"></i>식사</span>
+      <span><i class="dot-snack" style="border:2px solid var(--indigo)"></i>간식</span>
+      <span><i class="dot-drink"></i>술</span>
+    </div>
+  </section>
+
+  <section class="wrap wide" aria-labelledby="go-h">
+    <h2 class="section-title" id="go-h">다른 페이지</h2>
+    <div class="links">
+      <a class="linkcard" href="schedule.html">
+        <h3>상세 일정</h3>
+        <p>장소, 메모, 지도 링크가 붙은 시간표입니다. 먹은 끼니를 체크할 수 있습니다.</p>
+        <span class="prog" id="prog-meals"></span>
+      </a>
+      <a class="linkcard" href="archive.html">
+        <h3>볼거리, 먹거리, 쇼핑, 기념품</h3>
+        <p>일정에 넣은 곳과 후보를 카테고리별로 모았습니다.</p>
+        <span class="prog" id="prog-archive"></span>
+      </a>
+      <a class="linkcard" href="prep.html#prep">
+        <h3>출국 전 준비</h3>
+        <p>시기별 체크리스트와 이번 여행에서 바뀐 규정을 정리했습니다.</p>
+        <span class="prog" id="prog-prep"></span>
+      </a>
+      <a class="linkcard" href="prep.html#reserve">
+        <h3>예약이 필요한 곳</h3>
+        <p>5명이 함께 가는 식당과 나리타 익스프레스 예약을 정리했습니다.</p>
+        <span class="prog" id="prog-resv"></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap wide">
+    <button type="button" id="theme">화면 모드 바꾸기</button>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+const ROUTES = {
+  day1: "도쿄 도심",
+  day2: "도쿄, 가와고에, 도쿄",
+  day3: "도쿄, 요코하마, 도쿄",
+  day4: "도쿄, 나리타"
+};
+
+function renderRoute() {
+  const stops = [
+    ["도쿄", "1일차"], ["가와고에", "2일차"], ["도쿄", ""], ["요코하마", "3일차"], ["도쿄", ""], ["나리타", "4일차"]
+  ];
+  document.getElementById("route").innerHTML = stops.map(s =>
+    `<li>${s[0]}${s[1] ? `<small>${s[1]}</small>` : ""}</li>`).join("");
+}
+
+function renderGrid() {
+  const checks = loadJSON(KEYS.meals);
+  let total = 0;
+  document.getElementById("daygrid").innerHTML = DAYS.map((d, di) => {
+    const list = d.slots;
+    let n = 0, done = 0;
+    const items = list.map(s => {
+      if (s.kind === "break") {
+        return `<li class="brk"><span class="t">${s.time}</span><span>${s.title}</span><span></span></li>`;
+      }
+      n += 1;
+      if (checks[`${d.id}-${n}`]) done += 1;
+      const dots = s.tags.map(t => `<i class="${dotClass[t]}" title="${t}"></i>`).join("");
+      return `<li><span class="t">${s.time}</span><span>${s.title}</span><span class="dots">${dots}</span></li>`;
+    }).join("");
+    total += n;
+    const bars = Array.from({ length: n }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("");
+    return `<article class="daycol">
+      <p class="no">${di + 1}일차, ${d.date.replace("요일", "")}</p>
+      <h3>${d.title}</h3>
+      <p class="where">${ROUTES[d.id]}</p>
+      <div class="meter ${done === n ? "full" : ""}">${bars}</div>
+      <p class="cnt">${n}끼 중 ${done}끼 먹었어요</p>
+      <ul class="mini">${items}</ul>
+      <a class="more" href="schedule.html#${d.id}">상세 일정 보기</a>
+    </article>`;
+  }).join("");
+  document.getElementById("fact-meals").textContent = total + "끼";
+  const eaten = DAYS.reduce((a, d) => a + countChecked(checks, meals(d).map((_, i) => `${d.id}-${i + 1}`)), 0);
+  document.getElementById("prog-meals").textContent = `먹은 끼니 ${eaten}/${total}`;
+}
+
+function renderDday() {
+  const start = new Date(TRIP_START + "T00:00:00+09:00");
+  const end = new Date("2026-11-09T23:59:59+09:00");
+  const now = new Date();
+  const el = document.getElementById("dday");
+  const diff = Math.ceil((start - now) / 86400000);
+  if (now > end) el.textContent = "다녀왔어요";
+  else if (now >= start) el.textContent = "여행 중";
+  else el.textContent = "D-" + diff;
+}
+
+function renderProgress() {
+  const p = loadJSON(KEYS.prep), r = loadJSON(KEYS.resv);
+  const pc = countChecked(p, PREP.map(x => x.id));
+  const rc = countChecked(r, RESERVE.map(x => x.id));
+  document.getElementById("prog-prep").textContent = `준비 ${pc}/${PREP.length}`;
+  document.getElementById("prog-resv").textContent = `예약 완료 ${rc}/${RESERVE.length}`;
+  const plan = ARCHIVE.filter(a => a.day).length;
+  document.getElementById("prog-archive").textContent = `일정에 포함 ${plan}곳, 후보 ${ARCHIVE.length - plan}곳`;
+}
+
+document.getElementById("theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+
+renderRoute(); renderGrid(); renderDday(); renderProgress();
+</script>
+</body>
+</html>

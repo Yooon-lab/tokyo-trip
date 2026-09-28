@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도쿄 먹방 4일 | 아카이브</title>
+<meta name="description" content="볼거리, 먹거리, 쇼핑, 기념품을 카테고리별로 모은 아카이브">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍶</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap wide">
+    <a class="brand" href="index.html">도쿄 먹방 4일</a>
+    <nav class="tabs" aria-label="페이지">
+      <a href="index.html">홈</a>
+      <a href="schedule.html">상세 일정</a>
+      <a href="archive.html" aria-current="page">아카이브</a>
+      <a href="prep.html">준비·예약</a>
+    </nav>
+  </div>
+</header>
+
+<nav class="subnav" aria-label="카테고리">
+  <div class="wrap wide" id="catbar"></div>
+</nav>
+
+<div class="pagehead">
+  <div class="wrap wide">
+    <h1>아카이브</h1>
+    <p>볼거리, 먹거리, 쇼핑, 기념품을 지역별로 모았습니다. "일정 포함"은 상세 일정에 들어 있는 곳이고, "후보"는 자리가 나면 갈 만한 곳입니다.</p>
+  </div>
+</div>
+
+<main class="wrap wide">
+  <div class="subnav" style="position:static;border:0;background:none;backdrop-filter:none">
+    <div class="wrap" style="padding:0;max-width:none" id="areabar"></div>
+  </div>
+  <div id="list"></div>
+</main>
+
+<footer class="foot">
+  <div class="wrap wide">
+    <button type="button" id="theme">화면 모드 바꾸기</button>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+const state = { cat: "전체", area: "전체", plan: false };
+const AREA_LIST = ["전체", "도쿄", "가와고에", "요코하마"];
+
+function chipBar() {
+  const cb = document.getElementById("catbar");
+  cb.innerHTML = ["전체", ...CATS.map(c => c.id)].map(c =>
+    `<button class="chip" type="button" data-cat="${c}" aria-pressed="${state.cat === c}">${c}</button>`).join("");
+  const ab = document.getElementById("areabar");
+  ab.innerHTML = AREA_LIST.map(a =>
+    `<button class="chip" type="button" data-area="${a}" aria-pressed="${state.area === a}">${a}</button>`).join("") +
+    `<button class="chip" type="button" data-plan="1" aria-pressed="${state.plan}">일정 포함만</button>`;
+  ab.style.display = "flex"; ab.style.gap = "8px"; ab.style.flexWrap = "wrap"; ab.style.padding = "12px 0 0";
+}
+
+function renderList() {
+  const groups = CATS.filter(c => state.cat === "전체" || state.cat === c.id).map(c => {
+    const items = ARCHIVE.filter(a => a.cat === c.id && (state.area === "전체" || a.area === state.area) && (!state.plan || a.day));
+    if (!items.length) return "";
+    const rows = items.map(a => `<li class="item">
+      <div>
+        <h3>${a.name}</h3>
+        <div class="badges">
+          <span class="tag area">${a.area}</span>
+          ${a.day ? `<a class="tag plan" style="text-decoration:none" href="schedule.html#day${a.day}">${a.day}일차 일정 포함</a>` : `<span class="tag alt">후보</span>`}
+        </div>
+      </div>
+      <div>
+        <p>${a.desc}</p>
+        <p class="tip"><b>메모</b> ${a.tip}</p>
+        <a class="maplink" href="${mapUrl(a.q)}" target="_blank" rel="noopener">지도에서 찾기</a>
+      </div>
+    </li>`).join("");
+    return `<section class="cat" id="cat-${c.id}" aria-labelledby="h-${c.id}">
+      <h2 id="h-${c.id}">${c.id}</h2>
+      <p class="intro">${c.intro}</p>
+      <ul class="items">${rows}</ul>
+    </section>`;
+  }).join("");
+  document.getElementById("list").innerHTML = groups || `<p class="empty">조건에 맞는 곳이 없습니다. 필터를 바꿔 보세요.</p>`;
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button.chip");
+  if (!b) return;
+  if (b.dataset.cat) state.cat = b.dataset.cat;
+  if (b.dataset.area) state.area = b.dataset.area;
+  if (b.dataset.plan) state.plan = !state.plan;
+  chipBar(); renderList();
+});
+document.getElementById("theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+});
+
+chipBar(); renderList();
+</script>
+</body>
+</html>
